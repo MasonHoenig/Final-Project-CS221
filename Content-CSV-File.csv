@@ -1,0 +1,22 @@
+Type, Name, Year, Duration, Artist, Album, Rating,
+Track,What Was I Thinkin',2003,4.27,Dierks Bentley,Dierks Bentley,4.9,dierksBentley.jpg
+Track,Enter Sandman,1991,5.52,Metallica,Metallica,4.1,metallica.jpg
+Track,Everlong,1997,4.17,Foo Fighters,The Colour and The Shape,3.2,theColour.jpg
+Track,Ray Ray's Juke Joint,2006,3.2,Jamey Johnson,The Dollar,4.25,theDollar.jpg
+Track,Alibis,1993,3.01,Tracy Lawrence,Alibis,2.5,Alibis.jpg
+Track,Meltdown,2023,4.08,Travis Scott,UTOPIA,3.8,UTOPIA.png
+Track,Runnin',2020,3.27,21 Savage,Savage Mode II,3.95,Savage.jpg
+Track,For Whom The Bell Tolls,1984,5.17,Metallica,Ride The Lightning,4.15,Lightning.png
+Track,Doin' This,2022,4.13,Luke Combs,Growin' Up,3.95,growinUp.jpg
+Track,Highway Patrolman,1983,5.38,Johnny Cash,Johnny 99 ,4.8,johnny99.jpg
+Podcast,The Joe Rogan Experience,2009,118,Joe Rogan,,4,joeRogan.jpg
+Podcast,The Pat McAfee Show,2019,158,Pat McAffy,,5,pat.jpg
+Podcast,The Good Whale,2024,35,Serial Productions,,9,goodWhale.png
+Podcast,Crime Junkie,2017,203,AudioChunk,,2,crimeJunkie.jpg
+Podcast,Dateline,1992,60,NBC,,8,dateline.jpg
+Audiobook,The Great Escape,2009,538,Paul Brickhill,,TRUE,greatEscape.jpg
+Audiobook,The Art Of War,2015,67,Sun Tzu,,TRUE,war.jpg
+Audiobook,Game Theory,2022,108,Brian Chegg,,FALSE,gameTheory.jpg
+Audiobook,Greenlights,2020,411,Matthew McConaughey,,TRUE,greenlight.jpg
+Audiobook,The Reaper,2015,460,Nicholas Irving,,FALSE,reaper.jpg
+Track,a,2000,20,Me,,True,
