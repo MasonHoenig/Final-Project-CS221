@@ -5,8 +5,6 @@
         private string? author;
         private bool rating;
 
-        public AudioBook() { }
-
         public AudioBook(string? title, int year, double duration, string? author, bool rating, MediaType type, string image) : base(title, year, duration, type, image)
         {
             this.author = author;

@@ -6,8 +6,6 @@
         private string? album;
         private double rating;
 
-        public Track() { }
-
         public Track(string title, int year, double duration, string artist, string album, double rating, MediaType type, string image) : base(title, year, duration, type, image)
         {
             this.artist = artist;

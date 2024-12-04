@@ -8,8 +8,6 @@
         protected MediaType type;
         protected string image;
 
-        public Content() { }
-        
         public Content(string? title, int year, double duration, MediaType type, string image)
         {
             Title = title;

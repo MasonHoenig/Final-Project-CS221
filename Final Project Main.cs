@@ -403,26 +403,19 @@ namespace Final_Project_CS221
         {
             Console.WriteLine("Enter the 'Title' of an entry to view its cover");
             string? titleImage = Console.ReadLine();
-            string image = content.FirstOrDefault(a => a.Title.Equals(titleImage, StringComparison.OrdinalIgnoreCase)).Image;
-            if (!string.IsNullOrWhiteSpace(image))
+            string image = content.FirstOrDefault(a => a.Title.Equals(titleImage, StringComparison.OrdinalIgnoreCase))?.Image;
+            string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{image}";
+            if (File.Exists(ImageLocation))
             {
-                string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{image}";
-                if(File.Exists(ImageLocation))
+                ProcessStartInfo ProcessInfo = new ProcessStartInfo(ImageLocation, @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
                 {
-                    ProcessStartInfo ProcessInfo = new ProcessStartInfo(ImageLocation, @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
-                    {
-                        UseShellExecute = true,
-                        WorkingDirectory = Path.GetDirectoryName(ImageLocation),
-                        FileName = ImageLocation,
-                        Verb = "OPEN"
-                    };
-                    Process.Start(ProcessInfo);
-                    Console.WriteLine("Displaying cover... \n");
-                }
-                else
-                {
-                    Console.WriteLine("Item not found. \n");
-                }
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(ImageLocation),
+                    FileName = ImageLocation,
+                    Verb = "OPEN"
+                };
+                Process.Start(ProcessInfo);
+                Console.WriteLine("Displaying cover... \n");
             }
             else
             {

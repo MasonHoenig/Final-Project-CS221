@@ -5,8 +5,6 @@
         private string? creator;
         private int rating;
 
-        public Podcast() { }
-
         public Podcast(string? title, int year, double duration, string? creator, int rating, MediaType type, string image) : base(title, year, duration, type, image)
         {
             this.creator = creator;
