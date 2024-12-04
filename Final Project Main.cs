@@ -249,26 +249,33 @@ namespace Final_Project_CS221
                 "[3] Podcast");
             Int32.TryParse (Console.ReadLine(), out int typeChoice);
 
-            string? title;
-            int year;
-            double duration;
+            Console.Write("Title: ");
+            string? title = Console.ReadLine();
+
+            Console.Write("Year: ");
+            Int32.TryParse(Console.ReadLine(), out int year);
+
+            Console.Write("Duration: ");
+            Double.TryParse(Console.ReadLine(), out double duration);
+
+            Console.Write("Image (optional): ");
+            string? image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
+
             string? creator;
             string? album;
-            string? image;
             bool bookRating;
 
             switch (typeChoice)
             {
                 case 1:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Artist', 'Album', 'Rating'(0-5), and 'Image' file (optional)");
-                    title = Console.ReadLine();
-                    Int32.TryParse(Console.ReadLine(), out year);
-                    Double.TryParse(Console.ReadLine(), out duration);
+                    Console.Write("Artist: ");
                     creator = Console.ReadLine();
-                    album = Console.ReadLine();
-                    Double.TryParse(Console.ReadLine(), out double rating);
-                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
+                    Console.Write("Album: ");
+                    album = Console.ReadLine();
+
+                    Console.Write("Rating(0-5): ");
+                    Double.TryParse(Console.ReadLine(), out double rating);
                     try
                     {
                         Track track = new Track(title, year, duration, creator, album, rating, MediaType.Track, image);
@@ -284,15 +291,14 @@ namespace Final_Project_CS221
                     {
                         Console.WriteLine($"Failed to add Track: {e.Message}");
                     }
+                    Console.WriteLine();
                     break;
                 case 2:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Author', 'Rating' ('UP' or 'DOWN'), and 'Image' file (optional)");
-                    title = Console.ReadLine();
-                    Int32.TryParse(Console.ReadLine(), out year);
-                    Double.TryParse(Console.ReadLine(), out duration);
+                    Console.Write("Author: ");
                     creator = Console.ReadLine();
+
+                    Console.Write("Rating('Up' or 'Down'): ");
                     string? ratingString = Console.ReadLine();
-                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
                     if (ratingString.Equals("UP", StringComparison.OrdinalIgnoreCase)) { bookRating = true; }
                     else if (ratingString.Equals("Down", StringComparison.OrdinalIgnoreCase)) { bookRating = false; }
@@ -317,15 +323,14 @@ namespace Final_Project_CS221
                     {
                         Console.WriteLine($"Failed to add Audiobook: {e.Message}");
                     }
+                    Console.WriteLine();
                     break;
                 case 3:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Creator', 'Rating' (1-10), and 'Image' file (optional)");
-                    title = Console.ReadLine();
-                    Int32.TryParse(Console.ReadLine(), out year);
-                    Double.TryParse(Console.ReadLine(), out duration);
+                    Console.Write("Creator: ");
                     creator = Console.ReadLine();
+
+                    Console.Write("Rating (0-10): ");
                     Int32.TryParse(Console.ReadLine(), out int podcastRating);
-                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
                     try
                     {
@@ -342,6 +347,7 @@ namespace Final_Project_CS221
                     {
                         Console.WriteLine($"Failed to add podcast: {e.Message}");
                     }
+                    Console.WriteLine();
                     break;
             }
         }
@@ -396,14 +402,11 @@ namespace Final_Project_CS221
         private static void ViewCover(List<Content> content)
         {
             Console.WriteLine("Enter the 'Title' of an entry to view its cover");
-
-            var foundContent = content.FirstOrDefault(a => a.Title.Equals(Console.ReadLine(), StringComparison.OrdinalIgnoreCase));
-            string imageName = foundContent?.Image ?? "";
-
-            if (!string.IsNullOrWhiteSpace(imageName))
+            string? titleImage = Console.ReadLine();
+            string image = content.FirstOrDefault(a => a.Title.Equals(titleImage, StringComparison.OrdinalIgnoreCase)).Image;
+            if (!string.IsNullOrWhiteSpace(image))
             {
-                string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{imageName}";
-
+                string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{image}";
                 if(File.Exists(ImageLocation))
                 {
                     ProcessStartInfo ProcessInfo = new ProcessStartInfo(ImageLocation, @"%SystemRoot%\System32\rundll32.exe % ProgramFiles %\Windows Photo Viewer\PhotoViewer.dll, ImageView_Fullscreen %1")
