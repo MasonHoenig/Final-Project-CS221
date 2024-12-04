@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
-using System.IO;
-using System.Xml.Linq;
 using static Final_Project_CS221.Content;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Final_Project_CS221
 {
@@ -26,12 +23,11 @@ namespace Final_Project_CS221
 
             while (choice != 13)
             {
-
                 Console.WriteLine("" +
                     "[1] View All Entries\n" +
                     "[2] View Tracks\n" +
-                    "[3] View Audio Books\n" +
-                    "[4] View Podcasts\n" +
+                    "[3] View Podcasts\n" +
+                    "[4] View Audiobooks\n" +
                     "[5] Search by Artist/Author/Creator\n" +
                     "[6] Sort All Entries by Rating (decending)\n" +
                     "[7] Sort all Entries by Year (oldest to newest)\n" +
@@ -77,7 +73,7 @@ namespace Final_Project_CS221
                         SearchYear(content);
                         break;
                     case 10:
-                        AddContent(content, path, lineCount);
+                        AddContent(content, tracks, podcasts, books, path);
                         break;
                     case 11:
                         RemoveContent(content, path);
@@ -123,7 +119,6 @@ namespace Final_Project_CS221
                     int year = int.TryParse(cols[2], out int parsedYear) ? parsedYear : 0;
                     double duration = double.TryParse(cols[3], out double parsedDuration) ? parsedDuration : 0;
                     string creator = cols[4];
-                    //look into this more
                     string album = cols.Length > 5 ? cols[5] : "";
                     string image = cols.Length > 7 ? cols[7] : "";
 
@@ -166,18 +161,18 @@ namespace Final_Project_CS221
         }
         private static void PrintType<T>(List<Content> content) where T : Content
         {
-            foreach (var i in content)
+            foreach (var item in content)
             {
-                if (i is T)
+                if (item is T)
                 {
-                    Console.WriteLine(i);
+                    Console.WriteLine(item);
                 }
             }
             Console.WriteLine();
         }
         private static void SearchName(List<Content> content)
         {
-            Console.WriteLine("Enter name you would like to search");
+            Console.WriteLine("Enter name you would like to search:");
             string? name = Console.ReadLine();
             var nameSearch = content.Where(item =>
             {
@@ -229,6 +224,7 @@ namespace Final_Project_CS221
              content.OrderBy(item => item.Title)
                 .ToList ()
                 .ForEach(Console.WriteLine);
+            Console.WriteLine();
         }
         private static void SearchYear(List<Content> content)
         {
@@ -245,36 +241,38 @@ namespace Final_Project_CS221
             else { Console.WriteLine($"Year '{year}' not found."); }
             Console.WriteLine();
         }
-        private static void AddContent(List<Content> content, string path, int lineCount)
+        private static void AddContent(List<Content> content, List<Track> tracks, List<Podcast> podcasts, List <AudioBook> books, string path)
         {
             Console.WriteLine("Which type do you want to add: \n" +
                 "[1] Track \n" +
                 "[2] Audiobook \n" +
                 "[3] Podcast");
             Int32.TryParse (Console.ReadLine(), out int typeChoice);
-            string title;
+
+            string? title;
             int year;
             double duration;
             string? creator;
             string? album;
             string? image;
+            bool bookRating;
 
-            switch(typeChoice)
+            switch (typeChoice)
             {
                 case 1:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Artist', 'Album', 'Rating'(0-5), and 'image file'(press enter if null));");
+                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Artist', 'Album', 'Rating'(0-5), and 'Image' file (optional)");
                     title = Console.ReadLine();
                     Int32.TryParse(Console.ReadLine(), out year);
                     Double.TryParse(Console.ReadLine(), out duration);
                     creator = Console.ReadLine();
                     album = Console.ReadLine();
                     Double.TryParse(Console.ReadLine(), out double rating);
-                    image = Console.ReadLine();
-                    if(string.IsNullOrWhiteSpace(image)) { image = null; }
+                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
                     try
                     {
                         Track track = new Track(title, year, duration, creator, album, rating, MediaType.Track, image);
+                        tracks.Add(track);
                         content.Add(track);
 
                         using StreamWriter writer = new StreamWriter(path, append:true);
@@ -288,18 +286,26 @@ namespace Final_Project_CS221
                     }
                     break;
                 case 2:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Author', 'Rating' ('TRUE' or 'FALSE'), and 'Image' file (press enter if null));");
+                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Author', 'Rating' ('UP' or 'DOWN'), and 'Image' file (optional)");
                     title = Console.ReadLine();
                     Int32.TryParse(Console.ReadLine(), out year);
                     Double.TryParse(Console.ReadLine(), out duration);
                     creator = Console.ReadLine();
-                    bool.TryParse(Console.ReadLine(), out bool bookRating);
-                    image = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(image)) { image = null; }
+                    string? ratingString = Console.ReadLine();
+                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
+
+                    if (ratingString.Equals("UP", StringComparison.OrdinalIgnoreCase)) { bookRating = true; }
+                    else if (ratingString.Equals("Down", StringComparison.OrdinalIgnoreCase)) { bookRating = false; }
+                    else
+                    {
+                        Console.WriteLine("Invalid Entry");
+                        break;
+                    }
 
                     try
                     {
-                        AudioBook book = new AudioBook(title, year, duration, creator, bookRating, MediaType.Track, image);
+                        AudioBook book = new AudioBook(title, year, duration, creator, bookRating, MediaType.Audiobook, image);
+                        books.Add(book);
                         content.Add(book);
 
                         using StreamWriter writer = new StreamWriter(path, append: true);
@@ -313,18 +319,18 @@ namespace Final_Project_CS221
                     }
                     break;
                 case 3:
-                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Creator', 'Rating' (0-10), and 'Image' file (press enter if null));");
+                    Console.WriteLine("Enter the 'Title', 'Year', 'Duration', 'Creator', 'Rating' (1-10), and 'Image' file (optional)");
                     title = Console.ReadLine();
                     Int32.TryParse(Console.ReadLine(), out year);
                     Double.TryParse(Console.ReadLine(), out duration);
                     creator = Console.ReadLine();
                     Int32.TryParse(Console.ReadLine(), out int podcastRating);
-                    image = Console.ReadLine();
-                    if (string.IsNullOrWhiteSpace(image)) { image = null; }
+                    image = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
                     try
                     {
-                        Podcast podcast = new Podcast(title, year, duration, creator, podcastRating, MediaType.Track, image);
+                        Podcast podcast = new Podcast(title, year, duration, creator, podcastRating, MediaType.Podcast, image);
+                        podcasts.Add(podcast);
                         content.Add(podcast);
 
                         using StreamWriter writer = new StreamWriter(path, append: true);
@@ -347,7 +353,7 @@ namespace Final_Project_CS221
                 writer.WriteLine("Type, Name, Year, Duration, Artist, Album, Rating");
                 foreach (Content item in content)
                 {
-                    if (item is Podcast track)
+                    if (item is Track track)
                     {
                         writer.WriteLine(track.ToCSV());
                     }
@@ -390,11 +396,13 @@ namespace Final_Project_CS221
         private static void ViewCover(List<Content> content)
         {
             Console.WriteLine("Enter the 'Title' of an entry to view its cover");
-            string? titleImage = Console.ReadLine();
-            string image = content.FirstOrDefault(a => a.Title.Equals(titleImage, StringComparison.OrdinalIgnoreCase)).Image;
-            if (!string.IsNullOrWhiteSpace(image))
+
+            var foundContent = content.FirstOrDefault(a => a.Title.Equals(Console.ReadLine(), StringComparison.OrdinalIgnoreCase));
+            string imageName = foundContent?.Image ?? "";
+
+            if (!string.IsNullOrWhiteSpace(imageName))
             {
-                string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{image}";
+                string ImageLocation = $@"{AppDomain.CurrentDomain.BaseDirectory}\albumCovers\{imageName}";
 
                 if(File.Exists(ImageLocation))
                 {
